@@ -25,7 +25,7 @@ public class Solution {
                 .limit(3)
                 .min((x1, x2) -> (x1 - x2))
                 .get());
-        System.out.println("-------------");
+        System.out.println("--------------");
 
         // list of names of the 3 most senior employees with the title of "Engineer", in descending order of age
         List<Company> companyList = List.of(
