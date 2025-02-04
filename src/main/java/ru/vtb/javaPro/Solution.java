@@ -2,6 +2,7 @@ package ru.vtb.javaPro;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Solution {
     public static void main(String[] args) {
@@ -87,20 +88,20 @@ public class Solution {
         System.out.println("-------------");
 
         //  Найдите в списке слов самое длинное
-        String[] strings = new String[5];
-        strings[0] = "Мороз и солнце день чудесный";
-        strings[1] = "Еще ты дремлешь друг прелестный";
-        strings[2] = "Вечор ты помнишь вьюга злилась";
-        strings[3] = "На мутном небе мгла носилась";
-        strings[4] = "Блестя на солнце снег лежит";
+        String[][] strings = new String[][]{
+                {"Мороз и солнце день чудесный"},
+                {"Еще ты дремлешь друг прелестный"},
+                {"Вечор ты помнишь вьюга злилась"},
+                {"На мутном небе мгла носилась"},
+                {"Блестя на солнце снег лежит"}
+        };
 
-        System.out.println(Arrays.asList(Arrays.stream(List.of(strings)
-                        .stream()
-                        .collect(Collectors.joining(" "))
-                        .split(" "))
-                        .max((x1, x2) -> (x1.length() - x2.length()))
-                        .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)")))
+        System.out.println(Stream.of(strings)
+                .flatMap(Stream::of)
+                .map(s -> s.split(" "))
+                .flatMap(Stream::of)
+                .max((x1, x2) -> (x1.length() - x2.length()))
+                .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)"))
         );
     }
-
 }
