@@ -5,29 +5,31 @@ import java.util.stream.Collectors;
 
 public class Solution {
     public static void main(String[] args) {
-        // delete double
+        // удаление из листа всех дубликатов
         System.out.println(List.of(1,4,4,2,6,7,3,6,5,2,6,10).stream()
                 .distinct()
                 .collect(Collectors.toList()));
         System.out.println("-------------");
 
-        // 3rd largest number
+        // Найдите в списке целых чисел 3-е наибольшее число
         System.out.println(List.of(5,2,10,9,4,3,10,1,13).stream()
                 .sorted((o1, o2) -> o2.compareTo(o1))
-                .limit(3).min((x1, x2) -> (x1 - x2))
-                .get());
+                .limit(3)
+                .min((x1, x2) -> (x1 - x2))
+                .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)"))
+        );
         System.out.println("-------------");
 
-        // 3rd largest "unique" number
+        // Найдите в списке целых чисел 3-е наибольшее «уникальное» число
         System.out.println(List.of(5,2,10,9,4,3,10,1,13).stream()
                 .distinct()
                 .sorted((o1, o2) -> o2.compareTo(o1))
                 .limit(3)
                 .min((x1, x2) -> (x1 - x2))
-                .get());
+                .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)")));
         System.out.println("-------------");
 
-        // list of names of the 3 most senior employees with the title of "Engineer", in descending order of age
+        // получить список имен 3 самых старших сотрудников с должностью «Инженер», в порядке убывания возраста
         List<Company> companyList = List.of(
                 new Company("Иванов", 25, "Инженер"),
                 new Company("Петров", 50, "Директор"),
@@ -46,13 +48,13 @@ public class Solution {
                 .forEach(System.out::println);
         System.out.println("-------------");
 
-        // average age of employees with the position of "Engineer"
+        // посчитайте средний возраст сотрудников с должностью Инженер
         System.out.println(companyList.stream()
                 .filter(post -> post.getPost().equals("Инженер"))
                 .map(Company::getAge)
                 .mapToInt(i -> i)
                 .average()
-                .orElse(0));
+                .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)")));
         System.out.println("-------------");
 
         // Find the longest word in the list
@@ -60,43 +62,45 @@ public class Solution {
         Collections.addAll(stringList, "Мороз", "и", "солнце", "день", "чудесный", "Еще", "ты", "дремлешь", "друг", "прелестный");
         System.out.println(stringList.stream()
                 .max((x1, x2) -> (x1.length() - x2.length()))
-                .get());
+                .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)")));
         System.out.println("-------------");
 
-        // hashMap, pairs: word - how many times it occurs in the input string
+        //  Постройте хеш-мапы, в которой будут хранится пары: слово - сколько раз оно встречается во входной строке
         String str = "и раз и два и три пять четыре три два раз";
-        System.out.println(Arrays.asList(str.split(" ")).stream()
-                .distinct()
-                .collect(Collectors.toMap(k -> k, k -> Arrays.asList(str.split(" "))
-                        .stream()
-                        .filter(x -> (x.equals(k)))
-                        .count())))
-        ;
+        System.out.println(Arrays.asList(Arrays.stream(str.split(" "))
+                        .collect(
+                                Collectors.groupingBy(k -> k
+                                    ,Collectors.counting()
+                        )))
+        );
         System.out.println("-------------");
 
-        // lines from the list in order of increasing word length, if words have the same length, then the alphabetical order should be preserved
+        // Отпечатайте в консоль строки из списка в порядке увеличения длины слова,
+        // если слова имеют одинаковую длины, то должен быть сохранен алфавитный порядок
         List<String> stringList2 = new ArrayList<>();
         Collections.addAll(stringList2, "и", "раз", "и", "два", "и", "три", "пять", "три", "два", "прелестный");
+
         stringList2.stream()
-                .sorted(Collections.reverseOrder((x1, x2) -> (x2.compareTo(x1))))
-                .sorted((x1, x2) -> (x1.length() - x2.length()))
+                .sorted(Comparator.comparing(String::length)
+                        .thenComparing(Comparator.naturalOrder()))
                 .forEach(System.out::println);
         System.out.println("-------------");
 
-        // get the longest word
+        //  Найдите в списке слов самое длинное
         String[] strings = new String[5];
         strings[0] = "Мороз и солнце день чудесный";
         strings[1] = "Еще ты дремлешь друг прелестный";
         strings[2] = "Вечор ты помнишь вьюга злилась";
         strings[3] = "На мутном небе мгла носилась";
         strings[4] = "Блестя на солнце снег лежит";
-        System.out.println(Arrays.asList(List.of(strings)
+
+        System.out.println(Arrays.asList(Arrays.stream(List.of(strings)
                         .stream()
                         .collect(Collectors.joining(" "))
                         .split(" "))
-                .stream()
-                .max((x1, x2) -> (x1.length() - x2.length()))
-                .get());
+                        .max((x1, x2) -> (x1.length() - x2.length()))
+                        .orElseThrow(() -> new RuntimeException("Получено пустое значение (null)")))
+        );
     }
 
 }
